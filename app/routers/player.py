@@ -20,12 +20,8 @@ async def get_players(
     club_name: str = Query(default=None),
     page: int = Query(ge=1, default=1),
     size: int = Query(ge=1, le=50, default=10),
-    db: Session = Depends(db_context),
-    user: User = Depends(AuthenticationService.token_interceptor),
+    db: Session = Depends(db_context)
 ):
-    if not user.is_admin:
-        raise AccessDeniedError
-
     condition = SearchPlayerModel(player_name, club_name, page, size)
     result = PlayerService.get_players(db, condition)
     return result

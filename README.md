@@ -33,3 +33,9 @@ Supported APIs:
 2. Update `dev.env` file to configure database engine and its connection.
 3. Run `alembic upgrade head` for DB migration. (If postgres DB is used, make sure the DB is created in prior).
 4. Change directory (`cd`) to `app` folder then run command: `uvicorn main:app --reload`
+
+Note:
+
+- Default credentials for authentication:
+  - username: `root`
+  - password: `p@ssword`
