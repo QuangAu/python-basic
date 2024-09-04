@@ -12,7 +12,7 @@ class TransferHistory(Base_Migration, BaseEntity, BaseAudit):
     player_id = Column(UUID(), ForeignKey("player.id"), nullable=False)
     player = relationship("Player", foreign_keys=[player_id])
 
-    from_club_id = Column(UUID(), ForeignKey("club.id"), nullable=False)
+    from_club_id = Column(UUID(), ForeignKey("club.id"))
     from_club = relationship("Club", foreign_keys=[from_club_id])
 
     to_club_id = Column(UUID(), ForeignKey("club.id"))

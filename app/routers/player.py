@@ -49,5 +49,4 @@ async def set_player_club(
 
 @router.post("/{player_id}/transfer", status_code=status.HTTP_202_ACCEPTED)
 async def transfer_player(player_id: str, request: PlayerTransfer, db: Session = Depends(db_context)):
-    request.player_id = player_id
-    return PlayerService.transfer_player(db, request)
+    return PlayerService.transfer_player(db, player_id, request)

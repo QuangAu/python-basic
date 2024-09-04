@@ -8,7 +8,6 @@ from schemas.player import Player
 
 
 class PlayerTransfer(BaseModel):
-    player_id: str
     new_club: str
     fee: decimal.Decimal
     start_date: date

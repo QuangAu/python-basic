@@ -62,7 +62,7 @@ def upgrade() -> None:
     sa.Column('contract_end', sa.Date(), nullable=False),
     sa.Column('transfer_fee', sa.Numeric(), nullable=True),
     sa.Column('player_id', sa.UUID(), nullable=False),
-    sa.Column('from_club_id', sa.UUID(), nullable=False),
+    sa.Column('from_club_id', sa.UUID(), nullable=True),
     sa.Column('to_club_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_by', sa.UUID(), nullable=True),

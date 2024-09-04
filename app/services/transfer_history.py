@@ -21,8 +21,8 @@ def get_transfer_histories(db_context: Session):
             new_club.club_name.label('to_club')
         )
         .join(TransferHistory.player, isouter=True)
-        .join(old_club, TransferHistory.from_club_id == old_club.id)
-        .join(new_club, TransferHistory.to_club_id == new_club.id)
+        .join(old_club, TransferHistory.from_club_id == old_club.id, isouter=True)
+        .join(new_club, TransferHistory.to_club_id == new_club.id, isouter=True)
         .order_by(TransferHistory.transfer_fee)
     )
 
@@ -35,7 +35,7 @@ def build_transfer_history(
     existing_transfer = db_context.scalars(
         select(TransferHistory).filter(
             and_(
-                TransferHistory.player_id == UUID(transfer_data.player_id),
+                TransferHistory.player_id == player.id,
                 TransferHistory.from_club_id == player.club_id,
                 TransferHistory.to_club_id == UUID(transfer_data.new_club),
                 TransferHistory.contract_start == transfer_data.start_date,
@@ -48,7 +48,7 @@ def build_transfer_history(
         raise InvalidOperationError
     
     history = TransferHistory()
-    history.player_id = UUID(transfer_data.player_id)
+    history.player_id = player.id
     history.from_club_id = player.club_id
     history.to_club_id = UUID(transfer_data.new_club)
     history.contract_start = transfer_data.start_date

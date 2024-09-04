@@ -9,8 +9,8 @@ class TransferHistoryViewModel(BaseModel):
     transfer_fee: decimal.Decimal
     contract_start: date
     contract_end: date
-    from_club: str
-    to_club: str
+    from_club: str | None = None
+    to_club: str | None = None
 
     @field_serializer("transfer_fee")
     def decimal_custom_serializer(self, field_value: decimal.Decimal):

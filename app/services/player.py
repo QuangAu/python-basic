@@ -82,9 +82,9 @@ def set_player_club(db_context: Session, player_id: uuid4, club_id: uuid4):
     return player
 
 
-def transfer_player(db_context: Session, data: PlayerTransfer):
+def transfer_player(db_context: Session, player_id: str, data: PlayerTransfer):
     player = db_context.scalars(
-        select(Player).filter(Player.id == UUID(data.player_id))
+        select(Player).filter(Player.id == UUID(player_id))
     ).first()
 
     if player is None:
