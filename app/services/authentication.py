@@ -83,11 +83,12 @@ def token_interceptor(token: str = Depends(oa2_bearer)) -> User:
                 user.id = UUID(payload.get("id"))
                 user.name = payload.get("name")
                 user.is_admin = payload.get("is_admin")
-            case _:
+            case "client_credentials":
                 user = User()
                 user.login_id = "root" #client_credentials authentication acts like root user
                 user.is_admin = True
-
+            case _:
+                raise InValidLoginError    
         return user
     except jwt.InvalidTokenError:
         raise InValidLoginError

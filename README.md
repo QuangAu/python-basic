@@ -36,6 +36,10 @@ Supported APIs:
 
 Note:
 
-- Default credentials for authentication:
+- Default credentials for password authentication:
   - username: `root`
   - password: `p@ssword`
+- Default credentials for client_credentials authentication:
+  - client_id: auto-generated UUID and can be found in client table.
+  - client_secret: `some_secret_key`
+  - grant_type must be set to `client_credentials` when calling auth/token for getting access_token.
