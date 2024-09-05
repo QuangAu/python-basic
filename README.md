@@ -31,8 +31,10 @@ Supported APIs:
 
 1. Install required packages: `pip install -r requirements.txt`
 2. Update `dev.env` file to configure database engine and its connection.
-3. Run `alembic upgrade head` for DB migration. (If postgres DB is used, make sure the DB is created in prior).
-4. Change directory (`cd`) to `app` folder then run command: `uvicorn main:app --reload`
+3. Change directory (`cd`) to `app` folder
+4. Run `alembic upgrade head` for DB migration. (If postgres DB is used, make sure the DB is created in prior).
+5. Run command: `uvicorn main:app --reload` to start the application.
+6. Access API docs via this enpoint: `http://127.0.0.1:8000/docs`
 
 Note:
 
