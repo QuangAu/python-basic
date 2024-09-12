@@ -1,6 +1,6 @@
 from sqlalchemy import UUID, Column, DateTime, func
 import uuid
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 
 Base_Migration = declarative_base()

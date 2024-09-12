@@ -45,3 +45,4 @@ Note:
   - client_id: auto-generated UUID and can be found in client table.
   - client_secret: `some_secret_key`
   - grant_type must be set to `client_credentials` when calling auth/token for getting access_token.
+- Follow this article (https://stackoverflow.com/questions/5420789/how-to-install-psycopg2-with-pip-on-python) if you cannot install `psycopg2` on linux.

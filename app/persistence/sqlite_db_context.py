@@ -4,16 +4,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from settings import DB_NAME
 from persistence.Abstraction.database import database
-from sqlalchemy.ext.declarative import declarative_base
+from dataclasses import dataclass
 
-
+@dataclass(frozen=True, eq=True)
 class SqliteDbContext(database):
-    Base = declarative_base()
     
-    def __init__(self) -> None:
-        super().__init__()
-        connection_string = self.get_connection_string()
-        self.engine = create_engine(connection_string)
+    def __init__(self, connection_string: str=None) -> None:
+        super().__init__(connection_string)
+        self.engine = create_engine(self._connection_string)
         
 
     def get_connection_string(self, async_mode=False):

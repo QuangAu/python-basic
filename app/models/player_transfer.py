@@ -3,8 +3,6 @@ import decimal
 from uuid import UUID
 
 from pydantic import BaseModel
-from schemas.club import Club
-from schemas.player import Player
 
 
 class PlayerTransfer(BaseModel):

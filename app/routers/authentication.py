@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from common.exception import UnAuthorizedError
-from dependencies import db_context
+from dependencies import get_db_session
 from sqlalchemy.orm import Session
 from services import authentication as AuthService
 from models.authentication import OAuth2PasswordRequestFormNoStrict, Token
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/token")
 async def get_access_token(
-    form_data: OAuth2PasswordRequestFormNoStrict = Depends(), db: Session = Depends(db_context)
+    form_data: OAuth2PasswordRequestFormNoStrict = Depends(), db: Session = Depends(get_db_session)
 ):
     match form_data.grant_type:
         case "password":
