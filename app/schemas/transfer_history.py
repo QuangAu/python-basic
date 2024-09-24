@@ -1,9 +1,10 @@
 from sqlalchemy import Column, Date, ForeignKey, Numeric, UUID
 from sqlalchemy.orm import relationship
-from schemas.base_entity import BaseEntity, Base_Migration, BaseAudit
+from schemas.base_entity import BaseEntity, BaseAudit
+from services.database import Base
 
 
-class TransferHistory(Base_Migration, BaseEntity, BaseAudit):
+class TransferHistory(Base, BaseEntity, BaseAudit):
     __tablename__ = "transfer_history"
     contract_start = Column(type_=Date, nullable=False)
     contract_end = Column(type_=Date, nullable=False)

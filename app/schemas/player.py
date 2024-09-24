@@ -1,10 +1,11 @@
+from schemas.base_entity import BaseAudit, BaseEntity
+from schemas.enum.player_position import PlayerPosition
+from services.database import Base
 from sqlalchemy import UUID, Column, Enum, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
-from schemas.base_entity import BaseAudit, BaseEntity, Base_Migration
-from schemas.enum.player_position import PlayerPosition
 
 
-class Player(Base_Migration, BaseEntity, BaseAudit):
+class Player(Base, BaseEntity, BaseAudit):
     __tablename__ = "player"
     player_name = Column(String(50), nullable=False)
     age = Column(Integer)

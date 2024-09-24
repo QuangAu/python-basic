@@ -1,9 +1,6 @@
-from sqlalchemy import UUID, Column, DateTime, func
 import uuid
-from sqlalchemy.orm import declarative_base
 
-
-Base_Migration = declarative_base()
+from sqlalchemy import UUID, Column, DateTime, func
 
 
 class BaseAudit:
@@ -16,4 +13,5 @@ class BaseAudit:
 
 
 class BaseEntity:
+    id = Column(primary_key=True, type_=UUID, default=uuid.uuid4)
     id = Column(primary_key=True, type_=UUID, default=uuid.uuid4)

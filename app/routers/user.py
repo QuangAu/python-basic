@@ -1,32 +1,33 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from starlette import status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from common.exception import UnAuthorizedError
 from schemas.user import User
 from models.user import UpdateUserModel, UserModel, UserViewModel
-from dependencies import get_db_session
+from services.database import get_db_context
 from services import user as UserService
 from services import authentication as AuthenticationService
+from services import oauth2_authentication as OAuthAuthenticationService
 
 router = APIRouter(prefix="/users", tags=["User"])
 
 
 @router.get("", status_code=status.HTTP_200_OK, response_model=List[UserViewModel])
 async def get_users(
-    db: Session = Depends(get_db_session),
-    user: User = Depends(AuthenticationService.token_interceptor),
+    db: AsyncSession = Depends(get_db_context),
+    user: User = Depends(OAuthAuthenticationService.oauth_token_interceptor),
 ):
     if not user.is_admin:
         raise UnAuthorizedError
 
-    return UserService.get_users(db)
+    return await UserService.get_users(db)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=UserViewModel)
 async def add_new_user(
     request: UserModel,
-    db: Session = Depends(get_db_session),
+    db: AsyncSession = Depends(get_db_context),
     user: User = Depends(AuthenticationService.token_interceptor),
 ):
     if not user.is_admin:
@@ -39,7 +40,7 @@ async def add_new_user(
 async def change_user_password(
     old_password: str,
     new_password: str,
-    db: Session = Depends(get_db_session),
+    db: AsyncSession = Depends(get_db_context),
     user: User = Depends(AuthenticationService.token_interceptor),
 ):
 
@@ -50,7 +51,7 @@ async def change_user_password(
 async def update_user(
     user_id: str,
     request: UpdateUserModel,
-    db: Session = Depends(get_db_session),
+    db: AsyncSession = Depends(get_db_context),
     user: User = Depends(AuthenticationService.token_interceptor),
 ):
     if not user.is_admin:
@@ -61,7 +62,7 @@ async def update_user(
 @router.delete("/{user_id}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_user(
     user_id: str,
-    db: Session = Depends(get_db_session),
+    db: AsyncSession = Depends(get_db_context),
     user: User = Depends(AuthenticationService.token_interceptor),
 ):
     if not user.is_admin:

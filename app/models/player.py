@@ -1,4 +1,5 @@
 import decimal
+
 from pydantic import BaseModel, Field, field_serializer
 from schemas.enum.player_position import PlayerPosition
 

@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path="dev.env")
@@ -16,3 +17,7 @@ ADMIN_DEFAULT_PASSWORD = os.environ.get("DEFAULT_PASSWORD")
 JWT_SECRET = os.environ.get("JWT_SECRET")
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 JWT_TOKEN_DURATION = os.environ.get("JWT_TOKEN_DURATION")
+TENANT_ID = os.environ.get("TENANT_ID")
+APP_CLIENT_ID = os.environ.get("APP_CLIENT_ID")
+OPENAPI_CLIENT_ID = os.environ.get("OPENAPI_CLIENT_ID")
+OPENAPI_CLIENT_SECRET = os.environ.get("OPENAPI_CLIENT_SECRET")

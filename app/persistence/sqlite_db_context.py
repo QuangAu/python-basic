@@ -1,18 +1,17 @@
-import os
+from dataclasses import dataclass
 
+from persistence.Abstraction.database import database
+from settings import DB_NAME
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from settings import DB_NAME
-from persistence.Abstraction.database import database
-from dataclasses import dataclass
+
 
 @dataclass(frozen=True, eq=True)
 class SqliteDbContext(database):
-    
-    def __init__(self, connection_string: str=None) -> None:
+
+    def __init__(self, connection_string: str = None) -> None:
         super().__init__(connection_string)
         self.engine = create_engine(self._connection_string)
-        
 
     def get_connection_string(self, async_mode=False):
         """Get the connection string for the database
@@ -24,7 +23,9 @@ class SqliteDbContext(database):
 
     def get_db_context(self):
         try:
-            session_local = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+            session_local = sessionmaker(
+                autocommit=False, autoflush=False, bind=self.engine
+            )
             db = session_local()
             yield db
         finally:

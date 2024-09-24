@@ -1,6 +1,7 @@
 
-from datetime import date
 import decimal
+from datetime import date
+
 from pydantic import BaseModel, field_serializer
 
 

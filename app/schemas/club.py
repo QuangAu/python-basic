@@ -1,9 +1,10 @@
 from sqlalchemy import Column, Integer, Numeric, String
 from sqlalchemy.orm import relationship
-from schemas.base_entity import BaseEntity, Base_Migration, BaseAudit
+from schemas.base_entity import BaseEntity, BaseAudit
+from services.database import Base
 
 
-class Club(Base_Migration, BaseEntity, BaseAudit):
+class Club(Base, BaseEntity, BaseAudit):
     __tablename__ = "club"
     club_name = Column(String(50), nullable=False)
     country = Column(String(50), nullable=False)

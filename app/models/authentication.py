@@ -1,15 +1,17 @@
 
 from typing import Annotated, Union
-from typing_extensions import Doc
+
 from fastapi import Form
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
+from typing_extensions import Doc
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str
-    
+
+
 class OAuth2PasswordRequestFormNoStrict(OAuth2PasswordRequestForm):
     def __init__(
         self,

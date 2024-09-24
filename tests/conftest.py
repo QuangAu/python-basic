@@ -1,40 +1,74 @@
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine  
+import asyncio
 import sys
 sys.path.append('app')
 
-from schemas.base_entity import Base_Migration
+from httpx import AsyncClient
 import pytest
+import pytest_asyncio
 from testcontainers.postgres import PostgresContainer
-import app.settings
-from sqlalchemy.orm import sessionmaker
-from app.routers.player import get_db_session
+from app.routers.player import get_db_context
+
+from app.main import app, sessionmanager
 
 
-postgres = PostgresContainer("postgres:16-alpine", username="postgres", password="123123", dbname="fastapi_test")
+
+postgres = PostgresContainer("postgres:16-alpine", username="postgres", password="123123", dbname="fastapi_test", driver="asyncpg")
 postgres.start()
-        
-engine = create_engine(postgres.get_connection_url(), echo=True)
-session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base_Migration.metadata.create_all(bind=engine, checkfirst=True)
 
-@pytest.fixture(scope="session")
-def client(request):
-    def remove_container():
+@pytest_asyncio.fixture(scope="session")
+def event_loop():
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+    
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def connection_test(request, event_loop):
+    connection_str = postgres.get_connection_url()
+    sessionmanager.init(connection_str)
+    
+    def stop_db():
         postgres.stop()
+
+    request.addfinalizer(stop_db)
         
-    request.addfinalizer(remove_container)
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def create_tables(connection_test):
+    async with sessionmanager.get_db_connection() as connection:
+        await sessionmanager.drop_all(connection)
+        await sessionmanager.create_all(connection)    
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def session_override(connection_test):
+    async def get_db_override():
+        async with sessionmanager.get_db_session() as session:
+            yield session
+
+    app.dependency_overrides[get_db_context] = get_db_override
+
+   
+
+# @pytest.fixture(scope="session")
+# async def client(request):
+#     def remove_container():
+#         postgres.stop()
+        
+#     request.addfinalizer(remove_container)
     
-    def set_db_context():
-        try:
-            db = session_local()
-            yield db
-        finally:
-            db.close()
-    
-    from app.main import app        
-    app.dependency_overrides[get_db_session] = set_db_context
-    
-    with TestClient(app) as client:
+#     async with AsyncClient(
+#         transport=ASGITransport(app=app), base_url="http://test"
+#     ) as client:
+#         yield client
+   
+# from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine, AsyncConnection, AsyncEngine
+     
+# @pytest.fixture(scope="module")
+# def postgres_container():
+#     with PostgresContainer("postgres:16-alpine", username="postgres", password="123123", dbname="fastapi_test", driver="asyncpg") as postgres:
+#         yield postgres
+        
+@pytest_asyncio.fixture(scope="session")
+async def async_client():
+    async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
-        
+    

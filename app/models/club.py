@@ -1,4 +1,5 @@
 import decimal
+
 from pydantic import BaseModel, Field, field_serializer
 
 
@@ -7,17 +8,17 @@ class SearchClubModel:
         self.club_name = club_name
         self.page = page
         self.size = size
-        
+
+
 class ClubViewModel(BaseModel):
     club_name: str
     country: str
     rank: int
     market_value: decimal.Decimal
-    
-    @field_serializer("market_value")    
+
+    @field_serializer("market_value")
     def decimal_custom_serializer(self, field_value: decimal.Decimal):
         return round(decimal.Decimal(field_value), 0)
-        
 
 
 class ClubModel(BaseModel):
